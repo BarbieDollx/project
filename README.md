@@ -1,0 +1,1 @@
+this app is a simple login/signup app which comprise of a dashboard, a logout button, and a settings page
