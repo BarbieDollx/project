@@ -1,0 +1,77 @@
+.signup-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh; 
+    padding: 20px;
+}
+label{
+  font-weight: 600;
+  margin-bottom: -8px;
+}
+.signup-box {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px; 
+}
+
+.signup-box h1 {
+    color: #08060d;
+    font-size: 28px;
+    text-align: center;
+    margin: 19px;
+}
+
+.signup-box form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.signup-box input {
+    padding: 14px 16px;
+    border: 2px solid lightgray;
+    border-radius: 8px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box; 
+}
+
+.signup-box button {
+    padding: 14px;
+    background: blue;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    cursor: pointer;
+    margin-top: 8px;
+    width: 100%;
+}
+
+.signup-box button:hover {
+    background: #8a2be2;
+}
+
+.signup-box .login-link {
+    text-align: center;
+    margin-top: 20px;
+    color: #6b6375;
+    font-size: 15px;
+}
+
+/* REMOVE any spaces between text and link */
+.signup-box .login-link a {
+    color: blue;
+    text-decoration: none;
+    margin-left: 0; /* Remove any margin */
+    padding-left: 0; /* Remove any padding */
+}
+
+.signup-box .login-link a:hover {
+    color: #8a2be2;
+    text-decoration: underline;
+}
