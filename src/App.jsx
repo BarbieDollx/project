@@ -4,7 +4,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
-// import Settings from './pages/Settings';
+import Settings from './pages/Settings';
 import './App.css';
 
 const PublicRoute = ({ children }) => {
@@ -41,14 +41,14 @@ function App() {
              </ProtectedRoute>
            }
          />
-         {/* <Route
+         <Route
            path="/settings"
            element={
              <ProtectedRoute>
                <Settings />
              </ProtectedRoute>
            }
-         /> */}
+         />
          <Route path="/" element={<Navigate to="/login" replace />} />
          <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>

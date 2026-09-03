@@ -12,7 +12,7 @@ const Dashboard = () => {
                 <nav>
                     <Link to="/dashboard" className='nav-link active'>Dashboard</Link>
                     <Link to="/settings" className='nav-link'>Settings</Link>
-                    <button onClick={logout} className='btn btn-outline'>Logout</button>
+                    <button onClick={logout} className='btn-outline'>Logout</button>
                 </nav>
             </header>
             <main className='container'>
@@ -31,13 +31,15 @@ const Dashboard = () => {
                 </div>
                 <div className="card">
                     <p>ACCOUNT STATUS</p>
-                    <h2>Active</h2>
+                    <h2 className='activee'>Active</h2>
                 </div>
               </div>
               <div className='container2'>
                 <h1>Quick Actions</h1>
                 <div className='box2'>
-                   <div>Edit Profile</div>
+                   <div className='settings-link'>
+                     <Link to="/settings">Edit Profile</Link>
+                   </div>
                    <div>Change Password</div>
                 </div>
               </div>
