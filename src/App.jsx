@@ -5,6 +5,7 @@ import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
+import Products from './pages/Products';
 import './App.css';
 
 const PublicRoute = ({ children }) => {
@@ -46,6 +47,14 @@ function App() {
            element={
              <ProtectedRoute>
                <Settings />
+             </ProtectedRoute>
+           }
+         />
+          <Route
+           path="/products"
+           element={
+             <ProtectedRoute>
+               <Products />
              </ProtectedRoute>
            }
          />
