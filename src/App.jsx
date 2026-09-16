@@ -8,6 +8,7 @@ import Settings from './pages/Settings';
 import Products from './pages/Products';
 import './App.css';
 import CreateProduct from './pages/CreateProduct';
+import MyProducts from './pages/MyProducts';
 
 const PublicRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -64,6 +65,14 @@ function App() {
            element={
              <ProtectedRoute>
                <CreateProduct />
+             </ProtectedRoute>
+           }
+         />
+         <Route
+           path="/my-products"
+           element={
+             <ProtectedRoute>
+               <MyProducts />
              </ProtectedRoute>
            }
          />

@@ -21,9 +21,16 @@ const CreateProduct = () => {
         setError('');
 
         try {
+            const token = localStorage.getItem('token');
+            if(!token) {
+                throw new Error('Authentication required');
+            }
             const res = await fetch(`${API_URL}/api/products`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
                 body: JSON.stringify({
                     name: productName,
                     category,
@@ -40,7 +47,7 @@ const CreateProduct = () => {
                 throw new Error(data.message || 'Failed to create product');
             }
 
-            // Success! Go back to products page
+        
             navigate('/products');
         } catch (err) {
             setError(err.message || 'Failed to create product');
