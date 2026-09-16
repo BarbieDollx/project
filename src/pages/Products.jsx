@@ -54,8 +54,8 @@ function Products() {
 
             <main className="container">
                 <div className="products-header">
-                    <h1 className="products-title">Products</h1>
-                    <Link to="/products/new" className="btn-primary">
+                    <h1 className="products-title">All Products</h1>
+                    <Link to="/create-product" className="btn-primary">
                         + Add Product
                     </Link>
                 </div>
@@ -64,7 +64,7 @@ function Products() {
                     {products.length === 0 ? (
                         <div className="empty-state">
                             <p>No products found. Add your first product!</p>
-                            <Link to="/products/new" className="btn-primary">
+                            <Link to="/create-product" className="btn-primary">
                                 Add Product
                             </Link>
                         </div>

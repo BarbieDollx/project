@@ -16,7 +16,7 @@ const Dashboard = () => {
                     <button onClick={logout} className='btn-outline'>Logout</button>
                 </nav>
             </header>
-            <main className='container'>
+            <main className='dashboard-container'>
                 <div className='profile'>
                    <h1>Welcome back, {user?.name || "User"}!</h1>
                    <p>Here's an overview of your account.</p>
