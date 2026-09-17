@@ -9,6 +9,7 @@ function EditProduct() {
     const { id } = useParams();
     const navigate = useNavigate();
     const { logout } = useAuth();
+    
 
     const [productName, setProductName] = useState('');
     const [category, setCategory] = useState('');
@@ -78,7 +79,9 @@ function EditProduct() {
                     Authorization: `Bearer ${token}`
                 }
             });
+
             navigate('/my-products');
+            
 
         } catch (error) {
             console.error('Error updating product:', error);
@@ -93,62 +96,97 @@ function EditProduct() {
     };
 
     return (
-        <div className="dashboard">
-                       <header className="dashboard-header">
-                           <div className="logo">Account Hub</div>
-                           <nav>
-                               <Link to="/dashboard" className="nav-link">Dashboard</Link>
-                              <Link to="/my-products" className="nav-link active">My Products</Link>
-                               <Link to="/products" className="nav-link">Products</Link>
-                               <Link to="/settings" className="nav-link">Settings</Link>
-                               <button onClick={logout} className="btn-outline">Logout</button>
-                           </nav>
-                       </header>
-           
-                       <main className="container">
-                           <div className="products-header">
-                               <h1 className="products-title">All Products</h1>
-                               <Link to="/create-product" className="btn-primary">
-                                   + Add Product
-                               </Link>
-                           </div>
-           
-                           <div className="products-grid">
-                               {products.length === 0 ? (
-                                   <div className="empty-state">
-                                       <p>No products found. Add your first product!</p>
-                                       <Link to="/create-product" className="btn-primary">
-                                           Add Product
-                                       </Link>
-                                   </div>
-                               ) : (
-                                   products.map((product) => (
-                                       <div key={product._id} className="product-card">
-                                           <div className="product-image-wrapper">
-                                               <img 
-                                                   src={product.image || 'https://via.placeholder.com/300'} 
-                                                   alt={product.name}
-                                                   className="product-image"
-                                               />
-                                           </div>
-                                           <div className="product-info">
-                                               <h3 className="product-name">{product.name}</h3>
-                                               <p className="product-category">{product.category}</p>
-                                               <p className="product-price">${product.price}</p>
-                                               <p className={`product-stock ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}`}>
-                                                   {product.stock > 0 ? `In Stock (${product.stock})` : 'Out of Stock'}
-                                               </p>
-                                               <Link to={`/products/${product._id}`} className="btn-primary" style={{ marginTop: '12px' }}>
-                                                   View Details
-                                               </Link>
-                                           </div>
-                                       </div>
-                                   ))
-                               )}
-                           </div>
-                       </main>
-                   </div>
-               );
+         <div className="create-container">
+                    <div className="product-box">
+                        <div className="header">
+                            <h1>Edit Product</h1>
+                            <Link to="/products">← Back to Products</Link>
+                        </div>
+        
+                        {error && <p className="error">{error}</p>}
+        
+                        <form onSubmit={handleSubmit}>
+                            <label>
+                                Product Name:
+                                <input
+                                    type="text"
+                                    value={productName}
+                                    onChange={(e) => setProductName(e.target.value)}
+                                    placeholder="Enter product name"
+                                    required
+                                />
+                            </label>
+        
+                            <label>
+                                Category:
+                                <input
+                                    type="text"
+                                    value={category}
+                                    onChange={(e) => setCategory(e.target.value)}
+                                    placeholder="e.g., Electronics, Clothing..."
+                                    required
+                                />
+                            </label>
+        
+                            <label>
+                                Price ($):
+                                <input
+                                    type="number"
+                                    step="0.01"
+                                    value={productPrice}
+                                    onChange={(e) => setProductPrice(e.target.value)}
+                                    placeholder="0.00"
+                                    required
+                                />
+                            </label>
+        
+                            <label>
+                                Stock:
+                                <input
+                                    type="number"
+                                    value={stockQuantity}
+                                    onChange={(e) => setStockQuantity(e.target.value)}
+                                    placeholder="0"
+                                    required
+                                />
+                            </label>
+        
+                            <label>
+                                Description:
+                                <textarea
+                                    value={productDescription}
+                                    onChange={(e) => setProductDescription(e.target.value)}
+                                    placeholder="Enter a detailed description..."
+                                    required
+                                />
+                            </label>
+        
+                            <label>
+                                Image URL:
+                                <input
+                                    type="text"
+                                    value={productImage}
+                                    onChange={(e) => setProductImage(e.target.value)}
+                                    placeholder="Enter image URL"
+                                    required
+                                />
+                            </label>
+        
+                            <button type="submit" disabled={loading}>
+                                {loading ? 'Updating...' : 'Update Product'}
+                            </button>
+        
+                            <button
+                                type="button"
+                                onClick={() => navigate('/products')}
+                                className="cancel"
+                            >
+                                Cancel
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            );
 }
 
 export default EditProduct;
