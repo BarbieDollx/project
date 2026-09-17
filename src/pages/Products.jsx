@@ -47,6 +47,7 @@ function Products() {
                 <nav>
                     <Link to="/dashboard" className="nav-link">Dashboard</Link>
                     <Link to="/products" className="nav-link active">Products</Link>
+                    <Link to="/my-products" className="nav-link">My Products</Link>
                     <Link to="/settings" className="nav-link">Settings</Link>
                     <button onClick={logout} className="btn-outline">Logout</button>
                 </nav>

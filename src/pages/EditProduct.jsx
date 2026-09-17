@@ -1,44 +1,99 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import "./Products.css";
+import {useEffect, useState} from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
- const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-
- function MyProducts () {
-    const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
+function EditProduct() {
+    const { id } = useParams();
+    const navigate = useNavigate();
     const { logout } = useAuth();
 
+    const [productName, setProductName] = useState('');
+    const [category, setCategory] = useState('');
+    const [productDescription, setProductDescription] = useState('');
+    const [productPrice, setProductPrice] = useState('');
+    const [productImage, setProductImage] = useState('');
+    const [stockQuantity, setStockQuantity] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
 
     useEffect(() => {
-        const fetchMyProducts = async () => {
-          try{
+        const fetchProduct = async () => {
+            try{
+                const token = localStorage.getItem('token');
+
+                if(!token){
+                    throw new Error('You are not logged in. Please log in to edit products.');
+                }
+
+                const {data} = await axios.get(`${API_URL}/api/products/${id}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                setProductName(data.name || '');
+                setCategory(data.category || '');
+                setProductDescription(data.description || '');
+                setProductPrice(data.price || '');
+                setProductImage(data.image || '');
+                setStockQuantity(data.stock || '');
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching product:', error);
+
+                setError(
+                    error.message?.data?.message ||
+                    error.message ||
+                    'Failed to load product'
+                );
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProduct();
+    }, [id]);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError('');
+           
+        try {
             const token = localStorage.getItem('token');
-
-            const {data} = await axios.get(`${API_URL}/api/products/my`, {
-              headers: {
-                Authorization: `Bearer ${token}`
-              }
+            if(!token){
+                throw new Error('You are not logged in. Please log in to edit products.');
+            }
+            const {data} = await axios.put(`${API_URL}/api/products/${id}`, {
+                name: productName,
+                category,
+                description: productDescription,
+                price: productPrice,
+                image: productImage,
+                stock: stockQuantity
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
             });
-            setProducts(data);
-          } catch (err) {
-            setError('Failed to fetch products');
-          } finally {
-            setLoading(false);
-          }
-        }
-        fetchMyProducts();
-    }, []);
+            navigate('/my-products');
 
-     if (loading) return <div className="loading">Loading Products...</div>;
-    if (error) return <div className="error-message">Error: {error}</div>;
+        } catch (error) {
+            console.error('Error updating product:', error);
+            setError(
+                error.message?.data?.message ||
+                error.message ||
+                'Failed to update product'
+            );
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
-            <div className="dashboard">
+        <div className="dashboard">
                        <header className="dashboard-header">
                            <div className="logo">Account Hub</div>
                            <nav>
@@ -94,7 +149,6 @@ import axios from 'axios';
                        </main>
                    </div>
                );
- }
+}
 
-
- export default MyProducts;
+export default EditProduct;

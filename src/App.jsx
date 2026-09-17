@@ -9,6 +9,7 @@ import Products from './pages/Products';
 import './App.css';
 import CreateProduct from './pages/CreateProduct';
 import MyProducts from './pages/MyProducts';
+import EditProduct from './pages/EditProduct';
 
 const PublicRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -73,6 +74,14 @@ function App() {
            element={
              <ProtectedRoute>
                <MyProducts />
+             </ProtectedRoute>
+           }
+         />
+         <Route
+           path="/products/edit/:id"
+           element={
+             <ProtectedRoute>
+               <EditProduct />
              </ProtectedRoute>
            }
          />

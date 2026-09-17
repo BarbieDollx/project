@@ -21,6 +21,44 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.put('/:id', protect, async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+
+    if (!product) {
+      return res.status(404).json({
+        message: 'Product not found'
+      });
+    }
+
+    if(product.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        message: 'Not authorized to update this product'
+      });
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      req.params.id,
+      {
+        name: req.body.name,
+        category: req.body.category,
+        price: req.body.price,
+        stock: req.body.stock,
+        description: req.body.description,
+        image: req.body.image,
+      },
+      { new: true }
+    );
+
+    res.json(updatedProduct);
+  } catch (error) {
+    console.error('Update product error:', error);
+    res.status(400).json({
+      message: 'Error updating product'
+    });
+  }
+});
+
 // ==========================================
 // GET MY PRODUCTS
 // Protected route
