@@ -86,6 +86,9 @@ function Products() {
                                     <p className={`product-stock ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}`}>
                                         {product.stock > 0 ? `In Stock (${product.stock})` : 'Out of Stock'}
                                     </p>
+                                    <Link to={`/products/edit/${product._id}`} className="btn-primary" style={{ marginTop: '12px' }}>
+                                        Edit Product
+                                    </Link>
                                     <Link to={`/products/${product._id}`} className="btn-primary" style={{ marginTop: '12px' }}>
                                         View Details
                                     </Link>
