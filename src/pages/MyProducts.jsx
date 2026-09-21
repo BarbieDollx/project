@@ -11,6 +11,7 @@ import axios from 'axios';
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [deletingId, setDeletingId] = useState(null);
     const { logout } = useAuth();
 
 
@@ -33,6 +34,37 @@ import axios from 'axios';
         }
         fetchMyProducts();
     }, []);
+
+
+    const handleDelete = async (productId) => {
+        const confirmed = window.confirm(
+            'Are you sure you want to delete this product forever?'
+        )
+
+        if (!confirmed) return;
+
+        setDeletingId(productId);
+        setError('');
+
+
+        try{
+            const res = await fetch(`${API_URL}/api/products/${productId}`,{
+            method: 'DELETE',
+            });
+
+            const data = await res.json();
+
+            if(!res.ok){
+                throw new Error(data.message || 'Failed to delete product');
+            }
+
+            setProducts((prev) => prev.filter((p) => p._id !== productId));
+        } catch (err) {
+            setError(err.message);
+        } finally{
+            setDeletingId(null);
+        }
+    };
 
      if (loading) return <div className="loading">Loading Products...</div>;
     if (error) return <div className="error-message">Error: {error}</div>;
@@ -83,9 +115,18 @@ import axios from 'axios';
                                                <p className={`product-stock ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}`}>
                                                    {product.stock > 0 ? `In Stock (${product.stock})` : 'Out of Stock'}
                                                </p>
+                                               <Link to={`/products/edit/${product._id}`} className="btn-primary" style={{ marginTop: '12px' }}>
+                                                    Edit Product
+                                                </Link>
                                                <Link to={`/products/${product._id}`} className="btn-primary" style={{ marginTop: '12px' }}>
                                                    View Details
                                                </Link>
+                                               <button
+                                               onClick={() => handleDelete(product._id)}
+                                               disabled={deletingId === product._id}
+                                               className="btn-delete">
+                                                 {deletingId === product._id ? 'Deleting...' : 'Delete'}
+                                               </button>
                                            </div>
                                        </div>
                                    ))
