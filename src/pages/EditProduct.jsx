@@ -61,6 +61,7 @@ function EditProduct() {
         e.preventDefault();
         setLoading(true);
         setError('');
+        setSaving(true);
            
         try {
             const token = localStorage.getItem('token');
