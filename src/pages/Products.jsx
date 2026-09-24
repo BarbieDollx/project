@@ -115,7 +115,7 @@ function Products() {
                                     </Link>
 
                                     <button className="btn-add"
-                                      style={{width: '100%', marginBottom:'0.5rem', cursor:'pointer'}}
+                                      style={{width: '100%', marginBottom:'0.5rem', cursor:'pointer', marginTop: '12px', border: '1px solid red', backgroundColor: 'red'}}
                                       disabled={product.stock < 1 || addingId == product._id}
                                       onClick={() => handleAddToCart(product._id)}
                                     >

@@ -10,9 +10,6 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* ======================
-   MAIN CONTAINER ← ADD THIS
-   ====================== */
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -58,15 +55,6 @@
     border-bottom-color: #4a6cf7;
 }
 
-/* Rest of your CSS stays the same... */
-
-
-
-
-/* ======================
-   Products Page Styles
-   ====================== */
-
 .products-header {
   display: flex;
   justify-content: space-between;
@@ -83,14 +71,14 @@
   color: #1e293b;
 }
 
-/* Product Grid */
+
 .products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 1.75rem;
 }
 
-/* Product Card */
+
 .product-card {
   background: #ffffff;
   border-radius: 12px;
@@ -108,7 +96,7 @@
               0 8px 10px -6px rgba(0, 0, 0, 0.08);
 }
 
-/* Image */
+
 .product-image-wrapper {
   width: 100%;
   height: 200px;
@@ -127,7 +115,7 @@
   transform: scale(1.06);
 }
 
-/* Product Info */
+
 .product-info {
   padding: 1.25rem;
   display: flex;
@@ -154,7 +142,7 @@
   margin: 0 0 0.5rem 0;
   font-size: 1.25rem;
   font-weight: 700;
-  color: #0f766e; /* teal */
+  color: #0f766e; 
 }
 
 .product-stock {
@@ -164,11 +152,11 @@
 }
 
 .product-stock.in-stock {
-  color: #16a34a; /* green */
+  color: #16a34a; 
 }
 
 .product-stock.out-of-stock {
-  color: #dc2626; /* red */
+  color: #dc2626; 
 }
 
 /* Empty State */
