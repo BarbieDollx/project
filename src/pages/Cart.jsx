@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useAuth } from '../context/AuthContext';
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "./Cart.css";
@@ -9,6 +10,7 @@ function Cart() {
     const [cart, setCart] = useState({ items: [] });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [deletingId, setDeletingId] = useState(null);  // ← ADDED
     const { logout } = useAuth();
 
     const token = localStorage.getItem("token");
@@ -21,8 +23,8 @@ function Cart() {
                 },
             });
             setCart(data);
-        } catch(err) {
-            setError(err.respond?.data?.message || 'Failed to load cart');
+        } catch (err) {
+            setError(err.response?.data?.message || 'Failed to load cart');  // ← Fixed typo
         } finally {
             setLoading(false);
         }
@@ -31,7 +33,6 @@ function Cart() {
     useEffect(() => {
         fetchCart();
     }, []);
-
 
     const handleQty = async (productId, qty, stock) => {
         if (qty < 1) return;
@@ -51,14 +52,13 @@ function Cart() {
                 }
             );
             setCart(data);
-        } catch(err) {
+        } catch (err) {
             setError(err.response?.data?.message || 'Failed to update Quantity');
-        } finally {
-            setLoading(false);
         }
     };
 
     const handleRemove = async (productId) => {
+        setDeletingId(productId);  // ← Set deleting state
         setError('');
         try {
             const { data } = await axios.delete(`${API_URL}/api/cart/items/${productId}`,
@@ -69,10 +69,10 @@ function Cart() {
                 }
             );
             setCart(data);
-        } catch(err) {
+        } catch (err) {
             setError(err.response?.data?.message || 'Failed to remove item');
         } finally {
-            setLoading(false);
+            setDeletingId(null);  // ← Clear deleting state
         }
     };
 
@@ -87,23 +87,23 @@ function Cart() {
                 },
             });
             setCart(data);
-        } catch(err) {
+        } catch (err) {
             setError(err.response?.data?.message || 'Failed to clear cart');
         }
     };
 
-    if (loading)  {
-    return <div className='loading'>Loading cart...</div>;
-  }
+    if (loading) {
+        return <div className='loading'>Loading cart...</div>;
+    }
 
-  const items = cart.items || [];
-  const subtotal = items.reduce((sum, item) => {
-    const price = item.product?.price || 0;
-    return sum + price * item.qty;
-  }, 0);
+    const items = cart.items || [];
+    const subtotal = items.reduce((sum, item) => {
+        const price = item.product?.price || 0;
+        return sum + price * item.qty;
+    }, 0);
 
-  return (
-     <div className="dashboard">
+    return (
+        <div className="dashboard">
             <header className="dashboard-header">
                 <div className="logo">Account Hub</div>
                 <nav>
@@ -119,14 +119,14 @@ function Cart() {
             <main className="container">
                 <div className="cart-header">
                     <h1 className="cart-title">My Cart</h1>
-                    <button
-                        onClick={() => handleClear()}
-                        className="btn-primary"
-                    >
+                    <button onClick={() => handleClear()} className="btn-primary">
                         Clear Cart
                     </button>
-                 
-                   <div className="cart-grid">
+                </div>
+
+                {error && <div className="error-message">{error}</div>}
+
+                <div className="cart-grid">
                     {items.length === 0 ? (
                         <div className="empty-state">
                             <p>No items in cart!</p>
@@ -135,34 +135,75 @@ function Cart() {
                         items.map((item) => (
                             <div key={item._id} className="cart-card">
                                 <div className="cart-image-wrapper">
-                                    <img 
-                                        src={item.image || 'https://via.placeholder.com/300'} 
-                                        alt={item.name}
+                                    <img
+                                        src={item.product?.image || 'https://via.placeholder.com/300'}
+                                        alt={item.product?.name}
                                         className="cart-image"
                                     />
                                 </div>
                                 <div className="cart-info">
-                                    <h3 className="cart-name">{item.name}</h3>
-                                    <p className="cart-category">{item.category}</p>
-                                    <p className="cart-price">${item.price}</p>
-                                    <p className={`cart-stock ${item.stock > 0 ? 'in-stock' : 'out-of-stock'}`}>
-                                        {item.stock > 0 ? `In Stock (${item.stock})` : 'Out of Stock'}
+                                    <h3 className="cart-name">{item.product?.name}</h3>
+                                    <p className="cart-category">{item.product?.category}</p>
+                                    <p className="cart-price">${item.product?.price}</p>
+                                    <p className={`cart-stock ${item.product?.stock > 0 ? 'in-stock' : 'out-of-stock'}`}>
+                                        {item.product?.stock > 0 ? `In Stock (${item.product.stock})` : 'Out of Stock'}
                                     </p>
-                                    <Link to={`/products/${item._id}`} className="btn-primary" style={{ marginTop: '12px' }}>
+
+                                    {/* Quantity controls */}
+                                    <div className="cart-qty-controls">
+                                        <button
+                                            onClick={() => handleQty(item.product._id, item.qty - 1, item.product.stock)}
+                                            disabled={item.qty <= 1}
+                                        >
+                                            -
+                                        </button>
+                                        <span>Qty: {item.qty}</span>
+                                        <button
+                                            onClick={() => handleQty(item.product._id, item.qty + 1, item.product.stock)}
+                                            disabled={item.qty >= item.product.stock}
+                                        >
+                                            +
+                                        </button>
+                                    </div>
+
+                                    <p className="cart-item-total">
+                                        Subtotal: ${(item.product?.price || 0) * item.qty}
+                                    </p>
+
+                                    <Link
+                                        to={`/products/${item.product?._id}`}
+                                        className="btn-primary"
+                                        style={{ marginTop: '12px' }}
+                                    >
                                         View Details
                                     </Link>
+
+                                    <button
+                                        onClick={() => handleRemove(item.product._id)}
+                                        disabled={deletingId === item.product._id}
+                                        className="btn-primary"
+                                        style={{
+                                            marginTop: '12px',
+                                            border: '1px solid red',
+                                            backgroundColor: 'red'
+                                        }}
+                                    >
+                                        {deletingId === item.product._id ? 'Removing...' : 'Remove'}
+                                    </button>
                                 </div>
                             </div>
                         ))
                     )}
-                    </div>
-
-
                 </div>
+
+                {items.length > 0 && (
+                    <div className="cart-total">
+                        <h2>Total: ${subtotal.toFixed(2)}</h2>
+                    </div>
+                )}
             </main>
         </div>
-    )
+    );
 }
-
 
 export default Cart;
