@@ -9,6 +9,7 @@ function Products() {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [addingId, setAddingId] = useState(null)
     const { logout } = useAuth();
 
     useEffect(() => {
@@ -37,6 +38,28 @@ function Products() {
         fetchProducts();
     }, []);
 
+    const handleAddToCart = async (productId) => {
+        setAddingId(productId);
+        setError('');
+
+
+        try{
+            await axios.post(`${API_URL}/api/cart/items`,
+           {
+            productId, qty: 1 },
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            }
+        );
+        } catch(err) {
+            setError(err.response?.data?.message || 'Failed to add to cart')
+        } finally{
+            setAddingId(null);
+        }
+    }
+
     if (loading) return <div className="loading">Loading Products...</div>;
     if (error) return <div className="error-message">Error: {error}</div>;
 
@@ -48,6 +71,7 @@ function Products() {
                     <Link to="/dashboard" className="nav-link">Dashboard</Link>
                     <Link to="/products" className="nav-link active">Products</Link>
                     <Link to="/my-products" className="nav-link">My Products</Link>
+                    <Link to="/cart" className='nav-link'>Cart</Link>
                     <Link to="/settings" className="nav-link">Settings</Link>
                     <button onClick={logout} className="btn-outline">Logout</button>
                 </nav>
@@ -86,12 +110,21 @@ function Products() {
                                     <p className={`product-stock ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}`}>
                                         {product.stock > 0 ? `In Stock (${product.stock})` : 'Out of Stock'}
                                     </p>
-                                    <Link to={`/products/edit/${product._id}`} className="btn-primary" style={{ marginTop: '12px' }}>
-                                        Edit Product
-                                    </Link>
                                     <Link to={`/products/${product._id}`} className="btn-primary" style={{ marginTop: '12px' }}>
                                         View Details
                                     </Link>
+
+                                    <button className="btn-add"
+                                      style={{width: '100%', marginBottom:'0.5rem', cursor:'pointer'}}
+                                      disabled={product.stock < 1 || addingId == product._id}
+                                      onClick={() => handleAddToCart(product._id)}
+                                    >
+                                      {product.stock < 1
+                                       ? 'Out of stock'
+                                       : addingId == product._id
+                                       ? 'Adding...'
+                                       : 'Add to Cart'}
+                                    </button>
                                 </div>
                             </div>
                         ))

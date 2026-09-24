@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import "./Settings.css";
 
 const Settings = () => {
-    const { user, logout } = useAuth(); // ← Removed updatePassword (doesn't exist)
+    const { user, logout, updateProfile, changePassword } = useAuth(); // ← Removed updatePassword (doesn't exist)
     const navigate = useNavigate(); // ← Added for logout redirect
     
     const [name, setName] = useState(user?.name || "");
@@ -28,8 +28,7 @@ const Settings = () => {
         setProfileLoading(true);
 
         try {
-            // You'll need to add updateProfile to AuthContext
-            // For now, just show a message
+            await updateProfile( name, email );
             setProfileMessage('Profile updated successfully!');
         } catch (err) {
             setProfileError(err.message || 'Update failed');
@@ -57,8 +56,7 @@ const Settings = () => {
         }
 
         try {
-            // You'll need to add changePassword to AuthContext
-            // For now, just show a message
+            await changePassword(currentPassword, newPassword);
             setPasswordMessage('Password updated successfully!');
             setCurrentPassword("");
             setNewPassword("");

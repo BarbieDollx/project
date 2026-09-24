@@ -10,6 +10,7 @@ import './App.css';
 import CreateProduct from './pages/CreateProduct';
 import MyProducts from './pages/MyProducts';
 import EditProduct from './pages/EditProduct';
+import Cart from './pages/Cart';
 
 const PublicRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -84,6 +85,14 @@ function App() {
                <EditProduct />
              </ProtectedRoute>
            }
+         />
+         <Route
+         path='/cart'
+         element={
+          <ProtectedRoute>
+            <Cart/>
+          </ProtectedRoute>
+         }
          />
          <Route path="/" element={<Navigate to="/login" replace />} />
          <Route path="*" element={<Navigate to="/login" replace />} />

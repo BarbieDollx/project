@@ -77,6 +77,7 @@ import axios from 'axios';
                                <Link to="/dashboard" className="nav-link">Dashboard</Link>
                               <Link to="/my-products" className="nav-link active">My Products</Link>
                                <Link to="/products" className="nav-link">Products</Link>
+                               <Link to="/cart" className='nav-link'>Cart</Link>
                                <Link to="/settings" className="nav-link">Settings</Link>
                                <button onClick={logout} className="btn-outline">Logout</button>
                            </nav>
@@ -124,7 +125,8 @@ import axios from 'axios';
                                                <button
                                                onClick={() => handleDelete(product._id)}
                                                disabled={deletingId === product._id}
-                                               className="btn-delete">
+                                               className="btn-primary"
+                                               style={{marginTop: '12px', border: '1px solid red', backgroundColor: 'red'}}>
                                                  {deletingId === product._id ? 'Deleting...' : 'Delete'}
                                                </button>
                                            </div>
