@@ -9,6 +9,7 @@ function Cart() {
     const [cart, setCart] = useState({ items: [] });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const { logout } = useAuth();
 
     const token = localStorage.getItem("token");
 
@@ -51,7 +52,7 @@ function Cart() {
             );
             setCart(data);
         } catch(err) {
-            setError(err.respond?.data?.message || 'Failed to update Quantity');
+            setError(err.response?.data?.message || 'Failed to update Quantity');
         } finally {
             setLoading(false);
         }
@@ -69,7 +70,7 @@ function Cart() {
             );
             setCart(data);
         } catch(err) {
-            setError(err.respond?.data?.message || 'Failed to remove item');
+            setError(err.response?.data?.message || 'Failed to remove item');
         } finally {
             setLoading(false);
         }
@@ -87,7 +88,7 @@ function Cart() {
             });
             setCart(data);
         } catch(err) {
-            setError(err.respond?.data?.message || 'Failed to clear cart');
+            setError(err.response?.data?.message || 'Failed to clear cart');
         }
     };
 
